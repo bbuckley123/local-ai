@@ -161,3 +161,8 @@ cython_debug/
 
 # Flet
 storage/
+
+src/assets/models/**
+src/storage/models/**
+
+# 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

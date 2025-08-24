@@ -1,6 +1,7 @@
 # chat.py
 import asyncio
-from typing import Optional, Callable
+from collections.abc import Callable
+
 import flet as ft
 
 from core.llm_adapter import LlamaRunner
@@ -26,12 +27,10 @@ class ChatView:
         self.notify = notify
 
         # state
-        self._chat_task: Optional[asyncio.Task] = None
+        self._chat_task: asyncio.Task | None = None
 
         # transcript
-        self.transcript = ft.ListView(
-            expand=True, spacing=8, auto_scroll=True, padding=10
-        )
+        self.transcript = ft.ListView(expand=True, spacing=8, auto_scroll=True, padding=10)
 
         # compose area
         self.input = ft.TextField(
@@ -48,7 +47,10 @@ class ChatView:
         self.container = ft.Column(
             [
                 self.transcript,
-                ft.Row([self.input, self.btn_send], vertical_alignment=ft.CrossAxisAlignment.END),
+                ft.Row(
+                    [self.input, self.btn_send],
+                    vertical_alignment=ft.CrossAxisAlignment.END,
+                ),
                 self.status,
             ],
             expand=True,
@@ -69,9 +71,7 @@ class ChatView:
         self.page.update()
 
     def _append_user(self, text: str) -> None:
-        self.transcript.controls.append(
-            ft.Text(f"You: {text}", selectable=True)
-        )
+        self.transcript.controls.append(ft.Text(f"You: {text}", selectable=True))
         self.page.update()
 
     def _append_assistant_stub(self) -> ft.Text:
@@ -117,10 +117,10 @@ class ChatView:
 
         # start streaming
         q, cancel_flag, th = self.llm.stream_chat(
-            system_prompt="",           # keep it simple
+            system_prompt="",  # keep it simple
             user_prompt=prompt,
-            temperature=0.7,            # sensible default; hidden from UI
-            max_tokens=512,             # sensible default; hidden from UI
+            temperature=0.7,  # sensible default; hidden from UI
+            max_tokens=512,  # sensible default; hidden from UI
         )
 
         # read stream

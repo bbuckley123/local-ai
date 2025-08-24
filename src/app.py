@@ -1,8 +1,10 @@
 import flet as ft
-from ui.chat import ChatView
+
 from core.llm_adapter import LlamaRunner
+from ui.chat import ChatView
 
 APP_TITLE = "Local AI (Chat)"
+
 
 def main(page: ft.Page) -> None:
     page.title = APP_TITLE
@@ -27,6 +29,7 @@ def main(page: ft.Page) -> None:
             expand=True,
         )
     )
+
 
 if __name__ == "__main__":
     # assets_dir ensures your bundled model (src/assets/...) is available when packaged

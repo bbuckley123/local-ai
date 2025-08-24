@@ -20,6 +20,8 @@ PYI_OPTS := --collect-binaries llama_cpp --collect-data llama_cpp
 
 .PHONY: help venv deps run pyi clean
 help:
+	@echo "make fmt    # format"
+	@echo "make lint   # check style only"
 	@echo "make venv   # create venv"
 	@echo "make deps   # install runtime + packager into venv"
 	@echo "make run    # run dev (python src/app.py)"
@@ -33,7 +35,7 @@ venv:
 deps: venv
 	# flet is needed as a library at runtime; pyinstaller for packing
 	$(PY) -m pip install -U pip
-	$(PY) -m pip install -U flet pyinstaller
+	$(PY) -m pip install -U flet pyinstaller ruff black
 
 run: deps
 	$(PY) $(ENTRY)
@@ -50,11 +52,24 @@ pyi: deps
 clean:
 	rm -rf build dist *.spec
 
-.PHONY: fmt lint
+test: deps
+	@PYTHONPATH=src $(PY) -m pytest -q
+
+.PHONY: fmt lint lint-fix fix
+# Use the venv python from your existing vars
+RUFF := $(PY) -m ruff
+
 fmt:
-	ruff --fix .
-	black .
+	$(RUFF) format .
 
 lint:
-	ruff .
-	black --check .
+	$(RUFF) check .
+	$(RUFF) format --check .
+
+# Auto-fix lint issues + format files
+lint-fix:
+	$(RUFF) check --fix .
+	$(RUFF) format .
+
+# nice alias
+fix: lint-fix

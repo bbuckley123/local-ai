@@ -1,12 +1,8 @@
-# src/paths.py
 import os
 import sys
 from pathlib import Path
 
-# --- assets resolution --------------------------------------------------------
-
 ENV_ASSETS = "LOCALAI_ASSETS_DIR"
-
 
 def _env_assets_dir() -> Path | None:
     p = os.environ.get(ENV_ASSETS)
@@ -46,8 +42,6 @@ def _assets_dir() -> Path:
 
 
 ASSETS_DIR = _assets_dir()
-
-# --- model + output paths -----------------------------------------------------
 
 LLM_MODELS_DIR = ASSETS_DIR / "models" / "llm"
 

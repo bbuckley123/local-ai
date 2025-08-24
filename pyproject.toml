@@ -48,14 +48,20 @@ pytest = "8.3.3"
 [project.scripts]
 run = "flet run src/app.py"
 
-[tool.black]
-line-length = 88
-target-version = ["py39"]
-
 [tool.ruff]
-line-length = 88
-target-version = "py39"
+line-length = 100
+target-version = "py313"
+extend-exclude = ["dist", "build", ".venv"]
 
 [tool.ruff.lint]
-select = ["E", "F", "B", "W", "C90", "I", "UP"]
-ignore = ["E501"]
+select = ["E", "F", "I", "W", "UP", "B", "SIM"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["core", "ui"]
+combine-as-imports = true
+
+[tool.ruff.format]
+quote-style = "preserve"         # or "double"/"single"
+indent-style = "space"
+line-ending = "auto"
+skip-magic-trailing-comma = false

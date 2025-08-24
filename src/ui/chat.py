@@ -1,5 +1,5 @@
+# chat.py
 import asyncio
-from pathlib import Path
 from typing import Optional, Callable
 import flet as ft
 
@@ -17,7 +17,8 @@ class ChatView:
     Lazy-loads a default model on first send if not already loaded.
     """
 
-    DEFAULT_MODEL = LLM_MODELS_DIR / "Llama-3.1-8B-Instruct-Q4_K_M.gguf"
+    # NOTE: hardcoded to your Qwen file for now (no discovery yet).
+    DEFAULT_MODEL = LLM_MODELS_DIR / "qwen2.5-7b-instruct-q4_k_m.gguf"
 
     def __init__(self, page: ft.Page, llm: LlamaRunner, notify: NotifyFn) -> None:
         self.page = page
@@ -86,15 +87,23 @@ class ChatView:
             self.notify("llama-cpp-python not installed. `pip install llama-cpp-python`")
             return False
         try:
-            self.status.value = f"Loading model: {self.DEFAULT_MODEL.name}"
+            model_path = self.DEFAULT_MODEL.resolve()
+            self.status.value = f"Loading: {model_path}"
             self.page.update()
-            self.llm.load(str(self.DEFAULT_MODEL), n_ctx=4096)
-            self.notify(f"Loaded: {self.DEFAULT_MODEL.name}")
+
+            if not model_path.exists():
+                self.notify(f"Model missing at: {model_path}")
+                self.status.value = "Load failed."
+                self.page.update()
+                return False
+
+            self.llm.load(str(model_path), n_ctx=4096)
+            self.notify(f"Loaded: {model_path.name}")
             self.status.value = "Model loaded."
             self.page.update()
             return True
         except Exception as e:
-            self.notify(f"Failed to load model: {e}")
+            self.notify(f"Failed to load model ({e.__class__.__name__}): {e}")
             self.status.value = "Load failed."
             self.page.update()
             return False
@@ -104,16 +113,14 @@ class ChatView:
             return
 
         self._set_busy(True)
-
-        # create assistant message placeholder to stream into
         assistant_node = self._append_assistant_stub()
 
         # start streaming
         q, cancel_flag, th = self.llm.stream_chat(
-            system_prompt="",             # keep it simple
+            system_prompt="",           # keep it simple
             user_prompt=prompt,
-            temperature=0.7,              # sensible default; hidden from UI
-            max_tokens=512,               # sensible default; hidden from UI
+            temperature=0.7,            # sensible default; hidden from UI
+            max_tokens=512,             # sensible default; hidden from UI
         )
 
         # read stream
@@ -143,12 +150,10 @@ class ChatView:
             self.notify("Type something first.")
             return
 
-        # move input to transcript and clear box
         self._append_user(text)
         self.input.value = ""
         self.input.update()
 
-        # kick off async chat
         if self._chat_task and not self._chat_task.done():
             self.notify("Still answering the previous message.")
             return

@@ -33,6 +33,8 @@ path = "src"
 [tool.uv]
 dev-dependencies = [
     "flet[all]==0.28.3",
+    "black==25.1.0",
+    "ruff==0.12.7",
 ]
 
 [tool.poetry]
@@ -43,3 +45,15 @@ flet = {extras = ["all"], version = "0.28.3"}
 
 [project.scripts]
 run = "flet run src/app.py"
+
+[tool.black]
+line-length = 88
+target-version = ["py39"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "B", "W", "C90", "I", "UP"]
+ignore = ["E501"]

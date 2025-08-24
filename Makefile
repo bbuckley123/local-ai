@@ -49,3 +49,12 @@ pyi: deps
 
 clean:
 	rm -rf build dist *.spec
+
+.PHONY: fmt lint
+fmt:
+	ruff --fix .
+	black .
+
+lint:
+	ruff .
+	black --check .

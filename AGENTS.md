@@ -36,7 +36,7 @@ LLM coding agents. The instructions in this file apply to the entire repository.
 
 - The default chat model lives in `src/assets/models/llm/` and can be overridden by setting
   the `LOCALAI_ASSETS_DIR` environment variable to a directory containing `models/llm`.
-- The main application entry point is `src/app.py`; running `flet run src/app.py` launches the UI.
+- The main application entry point is `src/app.py`; running `make run` launches the UI.
 - Packaging is handled through `make pyi`, which wraps PyInstaller.
 
 ## Pull Requests

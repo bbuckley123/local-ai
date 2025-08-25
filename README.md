@@ -123,5 +123,5 @@ Pull requests and issues are welcome. Please format code with `ruff format`, run
 
 ## License
 
-This project has not been assigned a license yet.
+This project is licensed under the [MIT License](LICENSE).
 

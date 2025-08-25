@@ -45,9 +45,6 @@ package-mode = false
 flet = {extras = ["all"], version = "0.28.3"}
 pytest = "8.3.3"
 
-[project.scripts]
-run = "flet run src/app.py"
-
 [tool.ruff]
 line-length = 100
 target-version = "py313"

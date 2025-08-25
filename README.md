@@ -72,7 +72,7 @@ that contains `models/llm`. The `paths.py` module will pick it up automatically.
 ### 5. Run the app
 
 ```bash
-flet run src/app.py
+make run
 ```
 
 The window will open with a transcript view and a single input box. On first

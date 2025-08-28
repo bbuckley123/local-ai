@@ -1,12 +1,14 @@
 [project]
 name = "local-ai"
 version = "0.1.0"
-description = ""
+description = "Flet-based desktop app for local LLM chat via llama.cpp"
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [
     { name = "Brian Buckley", email = "bbuckley123@gmail.com" }
 ]
+license = { file = "LICENSE" }
+keywords = ["local-ai", "llm", "flet", "chatbot"]
 dependencies = [
   "flet==0.28.3",
   "llama-cpp-python>=0.3.15",

@@ -29,6 +29,7 @@ def reload_paths(tmp_assets=None, frozen=False, meipass=None, exe=None):
         # then recompute ASSETS_DIR/LLM_MODELS_DIR based on that
         paths.__file__ = str(tmp_assets.parent / "paths.py")  # type: ignore
         importlib.reload(paths)
+    paths.ensure_app_dirs()
     return paths
 
 
@@ -46,6 +47,8 @@ def test_dev_assets_dir(tmp_path, monkeypatch):
     if "paths" in sys.modules:
         del sys.modules["paths"]
     import paths
+
+    paths.ensure_app_dirs()
 
     assert paths.LLM_MODELS_DIR.resolve() == llm_dir.resolve()
 

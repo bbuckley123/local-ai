@@ -20,13 +20,15 @@ PYI_OPTS := --collect-binaries llama_cpp --collect-data llama_cpp
 
 .PHONY: help venv deps run pyi clean
 help:
-	@echo "make fmt    # format"
-	@echo "make lint   # check style only"
-	@echo "make venv   # create venv"
-	@echo "make deps   # install runtime + packager into venv"
-	@echo "make run    # run dev (python src/app.py)"
-	@echo "make pyi    # build app with PyInstaller"
-	@echo "make clean  # remove build artifacts"
+	@echo "make fmt       # format"
+	@echo "make lint      # check style only"
+	@echo "make venv      # create venv"
+	@echo "make deps      # install runtime + packager into venv"
+	@echo "make run       # run dev (python src/app.py)"
+	@echo "make pyi       # build app with PyInstaller"
+	@echo "make clean     # remove build artifacts"
+	@echo "make lint-fix  # fix lint issues"
+	@echo "make test      # run unit tests"
 
 venv:
 	@python -c "import sys,venv,os; p='$(VENV)'; os.path.exists(p) or venv.EnvBuilder(with_pip=True).create(p)" && \

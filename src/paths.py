@@ -4,6 +4,7 @@ from pathlib import Path
 
 ENV_ASSETS = "LOCALAI_ASSETS_DIR"
 
+
 def _env_assets_dir() -> Path | None:
     p = os.environ.get(ENV_ASSETS)
     if not p:

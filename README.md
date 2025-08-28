@@ -118,8 +118,9 @@ The resulting application bundle will appear under `dist/`.
 
 ## Contributing
 
-Pull requests and issues are welcome. Please format code with `ruff format`, run
-`ruff check` and ensure `pytest` passes before submitting.
+Pull requests and issues are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for setup details,
+coding standards, and the pull request process. By participating, you agree to abide by our
+[Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## License
 

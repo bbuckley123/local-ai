@@ -1,6 +1,7 @@
 # chat.py
 import asyncio
 from collections.abc import Callable
+from pathlib import Path
 
 import flet as ft
 
@@ -10,21 +11,33 @@ from paths import LLM_MODELS_DIR
 NotifyFn = Callable[[str], None]
 
 
+def find_gguf_model() -> Path | None:
+    """Return the first GGUF model under ``LLM_MODELS_DIR`` if available."""
+    if not LLM_MODELS_DIR.exists():
+        return None
+    files = sorted(LLM_MODELS_DIR.rglob("*.gguf"))
+    return files[0] if files else None
+
+
 class ChatView:
     """
     Minimal chat UI:
       - Transcript (scrolling) on top
       - One input field + Send on bottom
-    Lazy-loads a default model on first send if not already loaded.
+    Lazy-loads a model on first send if not already loaded.
     """
 
-    # NOTE: hardcoded to your Qwen file for now (no discovery yet).
-    DEFAULT_MODEL = LLM_MODELS_DIR / "qwen2.5-7b-instruct-q4_k_m.gguf"
-
-    def __init__(self, page: ft.Page, llm: LlamaRunner, notify: NotifyFn) -> None:
+    def __init__(
+        self,
+        page: ft.Page,
+        llm: LlamaRunner,
+        notify: NotifyFn,
+        model_path: Path | None = None,
+    ) -> None:
         self.page = page
         self.llm = llm
         self.notify = notify
+        self.model_path = model_path.expanduser().resolve() if model_path else None
 
         # state
         self._chat_task: asyncio.Task | None = None
@@ -87,15 +100,20 @@ class ChatView:
             self.notify("llama-cpp-python not installed. `pip install llama-cpp-python`")
             return False
         try:
-            model_path = self.DEFAULT_MODEL.resolve()
-            self.status.value = f"Loading: {model_path}"
-            self.page.update()
-
+            model_path = self.model_path or find_gguf_model()
+            if not model_path:
+                self.notify(f"No GGUF models found in: {LLM_MODELS_DIR}")
+                self.status.value = "Load failed."
+                self.page.update()
+                return False
             if not model_path.exists():
                 self.notify(f"Model missing at: {model_path}")
                 self.status.value = "Load failed."
                 self.page.update()
                 return False
+
+            self.status.value = f"Loading: {model_path}"
+            self.page.update()
 
             self.llm.load(str(model_path), n_ctx=4096)
             self.notify(f"Loaded: {model_path.name}")

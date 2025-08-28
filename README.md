@@ -57,17 +57,20 @@ Or with `uv`:
 uv sync
 ```
 
-### 4. Download a model
+### 4. Provide a model
 
-Place a GGUF model file in `src/assets/models/llm/`. The application defaults to
-`qwen2.5-7b-instruct-q4_k_m.gguf`, so the final path should look like:
+Place at least one GGUF model file under `src/assets/models/llm/`. On startup the app
+loads the first `.gguf` file it finds. To point to a specific file use the
+`LOCALAI_MODEL` environment variable or the `--model` command‑line option:
 
 ```
-src/assets/models/llm/qwen2.5-7b-instruct-q4_k_m.gguf
+LOCALAI_MODEL=/path/to/model.gguf make run
+# or
+python src/app.py --model /path/to/model.gguf
 ```
 
-If you want to store assets elsewhere, set `LOCALAI_ASSETS_DIR` to the directory
-that contains `models/llm`. The `paths.py` module will pick it up automatically.
+If you want to store assets elsewhere, set `LOCALAI_ASSETS_DIR` to a directory that
+contains `models/llm`. The `paths.py` module will pick it up automatically.
 
 ### 5. Run the app
 
@@ -110,9 +113,9 @@ The resulting application bundle will appear under `dist/`.
 
 ## Troubleshooting
 
-- **Missing model:** The chat view looks for the default model path. If it is
-  missing you will see a notification. Download the model or update the code to
-  point to your own file.
+- **Missing model:** The chat view searches for a GGUF file under `models/llm`. If none is
+  found, or the path given via `LOCALAI_MODEL`/`--model` is missing, you will see a
+  notification.
 - **GPU issues:** When packaging with PyInstaller the runner forces CPU mode by
   default to avoid Metal/OpenCL initialization failures.
 

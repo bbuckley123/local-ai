@@ -3,6 +3,8 @@ import sys
 import types
 from types import SimpleNamespace
 
+import ui.chat as chat
+
 
 # Minimal flet stub so ui.chat can be imported without the real dependency.
 class _Text:
@@ -59,8 +61,6 @@ fake_flet.Control = object
 fake_flet.ControlEvent = object
 fake_flet.Page = object
 sys.modules.setdefault("flet", fake_flet)
-
-import ui.chat as chat
 
 
 def test_find_gguf_model_none(tmp_path, monkeypatch):

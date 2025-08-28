@@ -4,6 +4,7 @@ from pathlib import Path
 
 ENV_ASSETS = "LOCALAI_ASSETS_DIR"
 
+
 def _env_assets_dir() -> Path | None:
     p = os.environ.get(ENV_ASSETS)
     if not p:
@@ -47,5 +48,9 @@ LLM_MODELS_DIR = ASSETS_DIR / "models" / "llm"
 
 APP_DIR = Path.home() / "LocalAI"
 OUTPUTS_DIR = APP_DIR / "outputs"
-for p in (APP_DIR, OUTPUTS_DIR):
-    p.mkdir(parents=True, exist_ok=True)
+
+
+def ensure_app_dirs() -> None:
+    """Ensure application data directories exist."""
+    for p in (APP_DIR, OUTPUTS_DIR):
+        p.mkdir(parents=True, exist_ok=True)

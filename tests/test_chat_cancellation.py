@@ -1,12 +1,14 @@
 import asyncio
-import pytest
 import queue
 import sys
 import threading
 import time
 import types
-import ui.chat as chat
 from types import SimpleNamespace
+
+import pytest
+
+import ui.chat as chat
 
 
 # Minimal flet stub so ui.chat can be imported without the real dependency.
@@ -65,6 +67,7 @@ fake_flet.ControlEvent = object
 fake_flet.Page = object
 sys.modules["flet"] = fake_flet
 
+
 class DummyRunner:
     def is_loaded(self) -> bool:
         return True
@@ -95,6 +98,7 @@ class DummyPage:
 
     def update(self) -> None:
         pass
+
 
 @pytest.mark.asyncio
 async def test_on_send_cancels_previous() -> None:

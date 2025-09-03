@@ -1,5 +1,6 @@
 # chat.py
 import asyncio
+import threading
 from collections.abc import Callable
 from pathlib import Path
 
@@ -41,6 +42,8 @@ class ChatView:
 
         # state
         self._chat_task: asyncio.Task | None = None
+        self._cancel_flag: threading.Event | None = None
+        self._worker_thread: threading.Thread | None = None
 
         # transcript
         self.transcript = ft.ListView(expand=True, spacing=8, auto_scroll=True, padding=10)
@@ -141,6 +144,9 @@ class ChatView:
             max_tokens=512,  # sensible default; hidden from UI
         )
 
+        self._cancel_flag = cancel_flag
+        self._worker_thread = th
+
         # read stream
         try:
             while True:
@@ -158,10 +164,30 @@ class ChatView:
                 else:
                     assistant_node.value += item
                     assistant_node.update()
+        except asyncio.CancelledError:
+            pass
         finally:
+            if self._worker_thread:
+                self._worker_thread.join()
+            self._cancel_flag = None
+            self._worker_thread = None
             self._set_busy(False)
 
     # ---- events ----
+    def _cancel_chat(self) -> None:
+        if self._cancel_flag:
+            self._cancel_flag.set()
+        if self._chat_task:
+            self._chat_task.cancel()
+        if self._worker_thread:
+            self._worker_thread.join()
+        self._cancel_flag = None
+        self._worker_thread = None
+        self._chat_task = None
+        self._set_busy(False)
+        self.status.value = "Canceled."
+        self.page.update()
+
     def _on_send(self, _: ft.ControlEvent) -> None:
         text = self.input.value.strip()
         if not text:
@@ -173,6 +199,5 @@ class ChatView:
         self.input.update()
 
         if self._chat_task and not self._chat_task.done():
-            self.notify("Still answering the previous message.")
-            return
+            self._cancel_chat()
         self._chat_task = self.page.run_task(self._run_chat, text)

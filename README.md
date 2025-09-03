@@ -2,6 +2,8 @@
 
 Local AI is a minimal desktop chat application that lets you run small language models completely offline. It uses [Flet](https://flet.dev/) for the user interface and [llama-cpp-python](https://github.com/abetlen/llama-cpp-python) for model inference. The goal of the project is to provide a simple starting point for experimenting with local models without relying on any external APIs.
 
+![Screenshot of the Local AI chat interface](docs/local-ai-example.png)
+
 ## Features
 
 - Cross‑platform graphical interface built with Flet.

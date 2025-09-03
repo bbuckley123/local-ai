@@ -5,7 +5,6 @@ responsibly disclose any vulnerabilities.
 
 ## Reporting a Vulnerability
 
-- **Email:** [bbuckley123@gmail.com](mailto:bbuckley123@gmail.com)
 - We aim to acknowledge reports within 48 hours and provide a more detailed response
   within 5 business days.
 

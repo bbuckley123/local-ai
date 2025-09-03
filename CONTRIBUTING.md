@@ -39,6 +39,23 @@ make lint    # lint only
 make test    # run tests
 ```
 
+## Secret Scanning
+
+Run a history scan before pushing to ensure no credentials are committed:
+
+```bash
+gitleaks detect --source . --report-format json --report-path gitleaks-report.json
+```
+
+If `gitleaks` is unavailable, try `git-secrets`:
+
+```bash
+git-secrets --scan-history
+```
+
+Rotate any exposed credentials and scrub them from the repository history before opening a
+pull request.
+
 ## Pull Request Process
 
 1. Fork the repository and create your feature or bug fix.

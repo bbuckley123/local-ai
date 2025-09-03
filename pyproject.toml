@@ -12,6 +12,7 @@ keywords = ["local-ai", "llm", "flet", "chatbot"]
 dependencies = [
   "flet==0.28.3",
   "llama-cpp-python>=0.3.15,<0.4",
+  "pytest-asyncio>=1.1.0",
 ]
 
 [tool.flet]

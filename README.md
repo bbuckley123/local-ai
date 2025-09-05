@@ -1,13 +1,18 @@
 # Local AI
 
-Local AI is a minimal desktop chat application that lets you run small language models completely offline. It uses [Flet](https://flet.dev/) for the user interface and [llama-cpp-python](https://github.com/abetlen/llama-cpp-python) for model inference. The goal of the project is to provide a simple starting point for experimenting with local models without relying on any external APIs.
+Local AI is a minimal desktop chat application that lets you run small language models
+completely offline. It uses [Flet](https://flet.dev/) for the user interface and
+[llama-cpp-python](https://github.com/abetlen/llama-cpp-python) for model inference. The goal
+of the project is to provide a simple starting point for experimenting with local models
+without relying on any external APIs.
 
 ![Screenshot of the Local AI chat interface](docs/local-ai-example.png)
 
 ## Features
 
 - Cross‑platform graphical interface built with Flet.
-- Loads [GGUF](https://github.com/ggerganov/ggml/blob/master/docs/gguf.md) models through `llama-cpp-python`.
+- Loads [GGUF](https://github.com/ggerganov/ggml/blob/master/docs/gguf.md) models through
+  `llama-cpp-python`.
 - Streams model output token by token for a responsive chat experience.
 - Configurable asset directory and model location.
 - Tested using `pytest` with a lightweight fake model for fast feedback.
@@ -30,51 +35,40 @@ To start a new project from this repository:
 ## Project Layout
 
 ```text
-src/
-  app.py             # Flet application entry point
-  core/llm_adapter.py# Wrapper around llama-cpp-python
-  ui/chat.py         # Chat view and interaction logic
-  paths.py           # Resolves asset and output directories
-  assets/            # (not tracked) place models and other resources here
+.
+├── src/
+│   ├── app.py         # Flet application entry point
+│   ├── config.py      # Default configuration values
+│   ├── paths.py       # Resolves asset and output directories
+│   ├── core/          # LLM integration
+│   │   └── llm_adapter.py
+│   ├── ui/            # Chat interface
+│   │   └── chat.py
+│   ├── storage/       # Persistence helpers
+│   └── assets/        # Place models and other resources here
+└── tests/             # Pytest suite
 ```
 
 ## Getting Started
 
-### 1. Install Python
+### 1. Create a virtual environment
 
-Ensure you have **Python 3.9 or newer** available on your system.
-
-### 2. Create a virtual environment
-
-You can use any tool you like. Using `python -m venv`:
+Use your preferred tool. With [`uv`](https://github.com/astral-sh/uv):
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate  # On Windows use `.venv\Scripts\activate`
+uv venv
+source .venv/bin/activate  # On Windows use `.venv\\Scripts\\activate`
 ```
 
-### 3. Install dependencies
+### 2. Install dependencies
 
-Install runtime and development dependencies. The project uses [`uv`](https://github.com/astral-sh/uv) but regular `pip` works as well.
-
-Using `pip`:
-
-```bash
-pip install -r <(python - <<'PY'
-import toml
-print('\n'.join(toml.load('pyproject.toml')['project']['dependencies']))
-PY
-)
-pip install flet[all]==0.28.3 ruff black pytest
-```
-
-Or with `uv`:
+Install runtime and development dependencies with `uv`:
 
 ```bash
 uv sync
 ```
 
-### 4. Provide a model
+### 3. Provide a model
 
 Place at least one GGUF model file under `src/assets/models/llm/`. On startup the app
 loads the first `.gguf` file it finds. To point to a specific file use the
@@ -89,7 +83,7 @@ python src/app.py --model /path/to/model.gguf
 If you want to store assets elsewhere, set `LOCALAI_ASSETS_DIR` to a directory that
 contains `models/llm`. The `paths.py` module will pick it up automatically.
 
-### 5. Run the app
+### 4. Run the app
 
 ```bash
 make run

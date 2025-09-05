@@ -12,7 +12,6 @@ keywords = ["local-ai", "llm", "flet", "chatbot"]
 dependencies = [
   "flet==0.28.3",
   "llama-cpp-python>=0.3.15,<0.4",
-  "pytest-asyncio>=1.1.0",
 ]
 
 [tool.flet]
@@ -39,6 +38,7 @@ dev-dependencies = [
     "black==25.1.0",
     "ruff==0.12.7",
     "pytest==8.3.3",
+    "pytest-asyncio>=1.1.0",
 ]
 
 [tool.poetry]
@@ -47,6 +47,7 @@ package-mode = false
 [tool.poetry.group.dev.dependencies]
 flet = {extras = ["all"], version = "0.28.3"}
 pytest = "8.3.3"
+pytest-asyncio = ">=1.1.0"
 
 [tool.ruff]
 line-length = 100

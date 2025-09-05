@@ -163,7 +163,15 @@ cython_debug/
 #.idea/
 
 # Flet
-storage/
+/storage/
 
-src/assets/models/**
-src/storage/models/**
+# Model assets
+src/assets/models/*
+!src/assets/models/.gitkeep
+!src/assets/models/llm/
+src/assets/models/llm/*
+!src/assets/models/llm/.gitkeep
+
+# Stored models
+src/storage/models/*
+!src/storage/models/.gitkeep

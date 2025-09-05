@@ -52,6 +52,12 @@ def fresh_runner_module():
     return importlib.import_module("core.llm_adapter")
 
 
+def fresh_config_module():
+    if "config" in sys.modules:
+        del sys.modules["config"]
+    return importlib.import_module("config")
+
+
 def test_load_file_not_found(tmp_path):
     m = fresh_runner_module()
     r = m.LlamaRunner()
@@ -130,3 +136,48 @@ def test_stream_chat_cancel(tmp_path):
         got.append(item)
     # We should have gotten 0 or a small number of chunks, not the full text
     assert len("".join(got)) <= len("Hello, world!\n")
+
+
+def test_env_overrides(monkeypatch, tmp_path):
+    monkeypatch.setenv("LOCALAI_TEMPERATURE", "0.5")
+    monkeypatch.setenv("LOCALAI_MAX_TOKENS", "64")
+    monkeypatch.setenv("LOCALAI_CTX_SIZE", "2048")
+
+    cfg = fresh_config_module()
+    m = fresh_runner_module()
+    r = m.LlamaRunner()
+
+    model = tmp_path / "m.gguf"
+    model.write_bytes(b"x")
+
+    r.load(str(model))
+    assert r._llm.kwargs["n_ctx"] == 2048
+
+    captured: dict[str, float | int] = {}
+    orig = r._llm.create_completion
+
+    def wrapped_create_completion(*, prompt, stream, max_tokens, temperature, top_p, stop):
+        captured["max_tokens"] = max_tokens
+        captured["temperature"] = temperature
+        return orig(
+            prompt=prompt,
+            stream=stream,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            top_p=top_p,
+            stop=stop,
+        )
+
+    r._llm.create_completion = wrapped_create_completion  # type: ignore[attr-defined]
+    q, cancel, th = r.stream_chat(system_prompt="", user_prompt="Hi?")
+    while True:
+        item = q.get()
+        if item is None:
+            break
+    th.join()
+
+    assert captured["temperature"] == 0.5
+    assert captured["max_tokens"] == 64
+    assert cfg.DEFAULT_TEMPERATURE == 0.5
+    assert cfg.DEFAULT_MAX_TOKENS == 64
+    assert cfg.DEFAULT_CTX_SIZE == 2048

@@ -6,6 +6,7 @@ from pathlib import Path
 
 import flet as ft
 
+from config import DEFAULT_CTX_SIZE, DEFAULT_MAX_TOKENS, DEFAULT_TEMPERATURE
 from core.llm_adapter import LlamaRunner
 from paths import LLM_MODELS_DIR
 
@@ -118,7 +119,7 @@ class ChatView:
             self.status.value = f"Loading: {model_path}"
             self.page.update()
 
-            self.llm.load(str(model_path), n_ctx=4096)
+            self.llm.load(str(model_path), n_ctx=DEFAULT_CTX_SIZE)
             self.notify(f"Loaded: {model_path.name}")
             self.status.value = "Model loaded."
             self.page.update()
@@ -140,8 +141,8 @@ class ChatView:
         q, cancel_flag, th = self.llm.stream_chat(
             system_prompt="",  # keep it simple
             user_prompt=prompt,
-            temperature=0.7,  # sensible default; hidden from UI
-            max_tokens=512,  # sensible default; hidden from UI
+            temperature=DEFAULT_TEMPERATURE,
+            max_tokens=DEFAULT_MAX_TOKENS,
         )
 
         self._cancel_flag = cancel_flag

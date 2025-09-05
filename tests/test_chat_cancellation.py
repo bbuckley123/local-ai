@@ -6,8 +6,6 @@ import time
 import types
 from types import SimpleNamespace
 
-import pytest
-
 import ui.chat as chat
 
 
@@ -100,26 +98,28 @@ class DummyPage:
         pass
 
 
-@pytest.mark.asyncio
-async def test_on_send_cancels_previous() -> None:
-    page = DummyPage()
-    notes: list[str] = []
-    view = chat.ChatView(page, DummyRunner(), notes.append)
+def test_on_send_cancels_previous() -> None:
+    async def run_test() -> None:
+        page = DummyPage()
+        notes: list[str] = []
+        view = chat.ChatView(page, DummyRunner(), notes.append)
 
-    view.input.value = "first"
-    view._on_send(None)
-    await asyncio.sleep(0.06)
-    first_flag = view._cancel_flag
-    first_thread = view._worker_thread
-    first_task = view._chat_task
-    assert first_flag and not first_flag.is_set()
-    assert first_thread and first_thread.is_alive()
+        view.input.value = "first"
+        view._on_send(None)
+        await asyncio.sleep(0.06)
+        first_flag = view._cancel_flag
+        first_thread = view._worker_thread
+        first_task = view._chat_task
+        assert first_flag and not first_flag.is_set()
+        assert first_thread and first_thread.is_alive()
 
-    view.input.value = "second"
-    view._on_send(None)
-    assert first_flag.is_set()
-    assert first_thread and not first_thread.is_alive()
-    assert view._chat_task and view._chat_task is not first_task
+        view.input.value = "second"
+        view._on_send(None)
+        assert first_flag.is_set()
+        assert first_thread and not first_thread.is_alive()
+        assert view._chat_task and view._chat_task is not first_task
 
-    view._cancel_chat()
-    await asyncio.sleep(0.01)
+        view._cancel_chat()
+        await asyncio.sleep(0.01)
+
+    asyncio.run(run_test())

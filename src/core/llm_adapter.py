@@ -9,6 +9,8 @@ try:
 except Exception:
     Llama = None  # handled by UI
 
+from config import DEFAULT_CTX_SIZE, DEFAULT_MAX_TOKENS, DEFAULT_TEMPERATURE
+
 
 class LlamaRunner:
     def __init__(self) -> None:
@@ -25,7 +27,7 @@ class LlamaRunner:
         self._llm = None
         self.model_path = None
 
-    def load(self, model_path: str, n_ctx: int = 4096) -> None:
+    def load(self, model_path: str, n_ctx: int = DEFAULT_CTX_SIZE) -> None:
         if not self.is_available():
             raise RuntimeError("llama-cpp-python not installed")
 
@@ -84,8 +86,8 @@ class LlamaRunner:
         self,
         system_prompt: str,
         user_prompt: str,
-        temperature: float = 0.7,
-        max_tokens: int = 512,
+        temperature: float = DEFAULT_TEMPERATURE,
+        max_tokens: int = DEFAULT_MAX_TOKENS,
     ) -> tuple["queue.Queue[str | None]", threading.Event, threading.Thread]:
         if self._llm is None:
             raise RuntimeError("Model not loaded")

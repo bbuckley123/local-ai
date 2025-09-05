@@ -98,6 +98,26 @@ make run
 The window will open with a transcript view and a single input box. On first
 send the model loads from disk and the response streams back into the chat.
 
+### Configuration
+
+Local AI reads a few generation parameters from the environment. Defaults are:
+
+| Parameter    | Default | Environment variable |
+|--------------|---------|----------------------|
+| Temperature  | 0.7     | `LOCALAI_TEMPERATURE` |
+| Max tokens   | 512     | `LOCALAI_MAX_TOKENS`  |
+| Context size | 4096    | `LOCALAI_CTX_SIZE`    |
+
+Override them when launching the app:
+
+```bash
+LOCALAI_TEMPERATURE=0.2 LOCALAI_MAX_TOKENS=256 \
+LOCALAI_CTX_SIZE=2048 make run
+```
+
+The values are defined in `src/config.py` so you can also edit that file or use a
+`.env`/configuration file.
+
 ## Development
 
 Run formatting, linting and tests before committing:

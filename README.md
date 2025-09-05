@@ -12,6 +12,21 @@ Local AI is a minimal desktop chat application that lets you run small language 
 - Configurable asset directory and model location.
 - Tested using `pytest` with a lightweight fake model for fast feedback.
 
+## Using this template
+
+To start a new project from this repository:
+
+1. Click **Use this template** on GitHub and choose **Create a new repository**.
+2. Rename the project:
+   - Update the repository name on GitHub.
+   - Replace references to "Local AI" in `README.md` and module names if needed.
+3. Update project metadata:
+   - Edit `pyproject.toml` with your package name, description, and author details.
+   - Adjust the license and other documentation to match your project.
+4. Customize the code:
+   - Modify modules under `src/` and tests in `tests/` to fit your requirements.
+   - Adjust dependencies in `pyproject.toml` as required.
+
 ## Project Layout
 
 ```text

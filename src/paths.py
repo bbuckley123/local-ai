@@ -2,7 +2,7 @@ import os
 import sys
 from pathlib import Path
 
-ENV_ASSETS = "LOCALAI_ASSETS_DIR"
+from config import DEFAULT_APP_DIR, ENV_ASSETS
 
 
 def _env_assets_dir() -> Path | None:
@@ -46,7 +46,7 @@ ASSETS_DIR = _assets_dir()
 
 LLM_MODELS_DIR = ASSETS_DIR / "models" / "llm"
 
-APP_DIR = Path.home() / "LocalAI"
+APP_DIR = DEFAULT_APP_DIR
 OUTPUTS_DIR = APP_DIR / "outputs"
 
 

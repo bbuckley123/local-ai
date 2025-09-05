@@ -1,6 +1,8 @@
 import importlib
 import sys
 
+from config import ENV_ASSETS
+
 
 def reload_paths(tmp_assets=None, frozen=False, meipass=None, exe=None):
     # Build a fresh module namespace so globals recompute on import
@@ -41,7 +43,7 @@ def test_dev_assets_dir(tmp_path, monkeypatch):
     llm_dir.mkdir(parents=True)
 
     # Tell paths.py to use our temp assets
-    monkeypatch.setenv("LOCALAI_ASSETS_DIR", str(assets_root))
+    monkeypatch.setenv(ENV_ASSETS, str(assets_root))
 
     # Reload module so it picks up the env override
     if "paths" in sys.modules:

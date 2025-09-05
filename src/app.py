@@ -4,11 +4,10 @@ from pathlib import Path
 
 import flet as ft
 
+from config import APP_TITLE, ENV_MODEL
 from core.llm_adapter import LlamaRunner
 from paths import ensure_app_dirs
 from ui.chat import ChatView
-
-APP_TITLE = "Local AI (Chat)"
 
 
 def main(page: ft.Page, model_path: Path | None) -> None:
@@ -42,7 +41,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--model",
         help="Path to GGUF model file",
-        default=os.environ.get("LOCALAI_MODEL"),
+        default=os.environ.get(ENV_MODEL),
     )
     args = parser.parse_args()
     model = Path(args.model).expanduser() if args.model else None
